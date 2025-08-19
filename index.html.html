@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Candradimuka Racing Club</title>
+  <style>
+    :root{
+      --bg:#0e0e0f;          /* latar belakang utama (dark) */
+      --panel:#17181a;       /* kartu/panel */
+      --muted:#9aa0a6;       /* teks sekunder */
+      --text:#e8eaed;        /* teks utama */
+      --accent:#ff3d00;      /* aksen racing */
+      --accent-2:#ffc400;    /* aksen sekunder */
+      --radius:16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+    img{max-width:100%;display:block}
+    a{color:var(--accent)}
+
+    /* ===== Sticky Header (logo + nama di tengah) ===== */
+    .header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(23,24,26,.9);backdrop-filter:saturate(140%) blur(6px);box-shadow:var(--shadow)}
+    .header-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:center;align-items:center;gap:.75rem;padding:.8rem 1rem}
+    .brand-logo{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.08)}
+    .brand-name{font-weight:800;letter-spacing:.5px}
+
+    /* ===== Hero (background fixed + cover) ===== */
+    .hero{min-height:100vh;display:grid;place-items:center;text-align:center;color:white;background:url('/Asset/Background\ Sircuit.jpg') center/cover fixed;position:relative}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.55))}
+    .hero-content{position:relative;z-index:1;max-width:900px;padding:0 1rem}
+    .hero-logo{width:120px;height:120px;margin:0 auto .75rem;border-radius:50%;border:3px solid rgba(255,255,255,.2);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+    .hero-title{font-size:clamp(28px,5vw,56px);margin:.25rem 0;font-weight:900;text-transform:uppercase}
+    .hero-sub{font-size:clamp(14px,2.5vw,18px);opacity:.9}
+
+    /* ===== Layout section ===== */
+    .container{max-width:1200px;margin:0 auto;padding:64px 18px}
+    section{scroll-margin-top:84px}
+    .section-title{font-size:clamp(22px,3.2vw,28px);font-weight:800;margin:0 0 18px 0}
+    .section-sub{color:var(--muted);margin:-6px 0 24px}
+
+    /* ===== Cards generic ===== */
+    .card{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+    /* ===== Informasi Tim ===== */
+    .info-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    @media (max-width: 900px){.info-grid{grid-template-columns:1fr}}
+    .info-list{padding:20px}
+    .info-list ul{list-style:none;padding:0;margin:8px 0 0 0;display:grid;gap:10px}
+    .badge{display:inline-block;background:rgba(255,61,0,.12);border:1px solid rgba(255,61,0,.25);color:#ffd5c9;padding:.18rem .5rem;border-radius:999px;font-size:.9rem}
+
+    .org-grid{padding:16px;display:grid;gap:10px}
+    .role{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06)}
+
+    /* ===== Galeri (ukuran sama, tanpa zoom) ===== */
+    .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+    @media (max-width: 768px){.gallery{grid-template-columns:1fr}}
+    .frame{aspect-ratio:16/9;background:#0a0a0a;border:1px solid rgba(255,255,255,.06);border-radius:14px;display:grid;place-items:center;overflow:hidden}
+    .frame img{max-width:100%;max-height:100%;object-fit:contain;/* tidak zoom/crop */image-rendering:auto}
+
+    /* ===== Statistik Klub ===== */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+    @media (max-width: 900px){.stats{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width: 520px){.stats{grid-template-columns:1fr}}
+    .stat{padding:22px;text-align:center;border:1px solid rgba(255,255,255,.06);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01))}
+    .stat h3{margin:0;font-size:14px;color:var(--muted);font-weight:600}
+    .stat .num{font-size:34px;font-weight:900;margin-top:6px;color:var(--accent-2)}
+
+    /* ===== Daftar Pembalap ===== */
+    .drivers{display:grid;gap:12px}
+    .driver{display:grid;grid-template-columns:2fr 2fr 1fr;gap:12px;align-items:center;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.02)}
+    .driver span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    @media (max-width: 720px){.driver{grid-template-columns:1fr}}
+
+    /* ===== CTA / Direct Link ===== */
+    .cta{display:grid;place-items:center;text-align:center;padding:32px;gap:12px}
+    .btn{display:inline-flex;align-items:center;gap:.6rem;padding:12px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(255,61,0,.18),rgba(255,61,0,.14));color:white;text-decoration:none;font-weight:800}
+    .btn:hover{transform:translateY(-1px)}
+
+    /* ===== Floating To Top ===== */
+    .to-top{position:fixed;right:18px;bottom:18px;width:46px;height:46px;border-radius:999px;border:none;background:var(--accent);color:white;font-size:20px;display:none;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer}
+    .to-top.show{display:flex}
+
+    /* ===== Reveal on scroll ===== */
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
+    .reveal.show{opacity:1;transform:none}
+
+    /* spacing helper after fixed header */
+    .spacer{height:76px}
+  </style>
+</head>
+<body>
+  <!-- Sticky Header (tanpa menu) -->
+  <header class="header" aria-label="Kepala Halaman">
+    <div class="header-inner">
+      <img class="brand-logo" src="/Asset/Logo.png" alt="Logo Candradimuka" />
+      <div class="brand-name"><h2><a href="/" style="text-decoration: none; text-decoration-color: white;">Candradimuka Racing Club</a></h2></div>
+    </div>
+  </header>
+  <div class="spacer" aria-hidden="true"></div>
+
+  <!-- Hero dengan background fixed + cover -->
+  <section class="hero" role="banner">
+    <div class="hero-content">
+      <img class="hero-logo" src="/Asset/Logo.png" alt="Logo Candradimuka" />
+      <h1 class="hero-title">Candradimuka Racing Club</h1>
+      <p class="hero-sub">“Sometimes we win and sometimes we learn. Living it all together, and celebrating together.”</p>
+    </div>
+  </section>
+
+  <!-- Informasi Tim -->
+  <section id="informasi" class="container reveal" aria-labelledby="h-info">
+    <h2 id="h-info" class="section-title">Team Information</h2>
+    <p class="section-sub">Club Identity and Organizational Structure.</p>
+
+    <div class="info-grid">
+      <div class="card info-list">
+        <div style="display:grid;gap:10px">
+          <div><strong>Team Name:</strong> <span id="i-nama">Candradimuka Racing Club</span></div>
+          <div><strong>Country:</strong> <span id="i-negara">Indonesia</span></div>
+          <div><strong>Members:</strong> <span id="i-anggota">—</span></div>
+          <div><strong>Rating:</strong> <span id="i-rating">—</span></div>
+          <div><strong>Motto:</strong> <span id="i-motto">“Api Semangat Tak Pernah Padam”</span> <span class="badge">Official</span></div>
+        </div>
+      </div>
+
+      <div class="card org-grid" aria-label="Struktur Tim">
+        <div class="role"><span>Manager</span><span id="r-manager">Kartiko</span></div>
+        <div class="role"><span>Co‑Manager</span><span id="r-co">—</span></div>
+        <div class="role"><span>Member</span><span id="r-mem">—</span></div>
+        <div class="role"><span>Member</span><span id="r-mem1">—</span></div>
+        <div class="role"><span>Member</span><span id="r-mem2">—</span></div>
+
+        <!-- Start Tambahan Role       
+        <div class="role"><span>Chief Engineer</span><span id="r-eng">—</span></div>
+        <div class="role"><span>Strategist</span><span id="r-strat">—</span></div>
+        <div class="role"><span>Mechanic</span><span id="r-mech">—</span></div>
+        End Tambahan Role -->   
+      
+      </div>
+    </div>
+  </section>
+
+  <!-- Galeri Tim (ukuran sama, responsif 2 kolom desktop, 1 seluler) -->
+  <section id="galeri" class="container reveal" aria-labelledby="h-galeri">
+    <h2 id="h-galeri" class="section-title">Team Gallery</h2>
+    <div class="gallery">
+      <figure class="frame"><img loading="lazy" src="https://www.myracingcareer.com/images/cars/club/cli/custom/162.png?44" alt="Foto Mobil Candradimuka"/></figure>
+      <figure class="frame"><img loading="lazy" src="https://www.myracingcareer.com/images/club/helmets/162_1.png" alt="Foto Helm Candradimuka"/></figure>
+    </div>
+  </section>
+
+  <!-- Statistik Klub di Club Series -->
+  <section id="statistik" class="container reveal" aria-labelledby="h-stats">
+    <h2 id="h-stats" class="section-title">Club Statistics in Club Series</h2>
+    <p class="section-sub">Regular updates every week according to the results of the current season.</p>
+    <div class="stats">
+      <div class="stat"><h3>Team Rankings</h3><div class="num" id="s-rank">—</div></div>
+      <div class="stat"><h3>Points</h3><div class="num" id="s-points">—</div></div>
+      <div class="stat"><h3>Win the Race</h3><div class="num" id="s-wins">—</div></div>
+      <div class="stat"><h3>Season</h3><div class="num" id="s-seasons">—</div></div>
+    </div>
+  </section>
+
+  <!-- Daftar Pembalap -->
+  <section id="pembalap" class="container reveal" aria-labelledby="h-drivers">
+    <h2 id="h-drivers" class="section-title">List of Racer Names</h2>
+    <p class="section-sub">Racer Name • Manager Name • Country</p>
+    <div class="card" style="padding:16px">
+      <div class="drivers" id="drivers-list">
+        <!-- diisi via JS dari dataTeam.drivers -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Direct Link -->
+  <section id="link" class="container reveal" aria-labelledby="h-link">
+    <h2 id="h-link" class="section-title">Direct Link</h2>
+    <div class="card cta">
+      <a class="btn" id="club-link" href="https://www.myracingcareer.com/id/clubs/profile-162-profile/" target="_blank" rel="noopener">Visit Club Profile in MyRacingCareer</a>
+      <span class="section-sub">Official link of Candradimuka Racing Club club profile.</span>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="container" style="padding-top:16px">
+    <div class="card" style="padding:18px;text-align:center;color:var(--muted)">
+      © <span id="year"></span> Candradimuka Racing Club · Made for the MyRacingCareer community
+    </div>
+  </footer>
+
+  <!-- Floating To Top -->
+  <button id="toTop" class="to-top" aria-label="Kembali ke atas">↑</button>
+
+  <script>
+    // ===== Editable data (isi sesuai profil klub di MRC) =====
+    const dataTeam = {
+      name: "Candradimuka Racing Club",
+      country: "Indonesia",
+      members: "5",
+      rating: "32.312",
+      motto: "Sometimes we win and sometimes we learn. Living it all together, and celebrating together.",
+      roles: {
+        manager: "AldaMranggen",
+        coManager: "MANUELNEGRILLO2",
+        members:"Ahhhhhhh",
+        members1:"AhmadZakk25",
+        members2:"Adrian2000",
+        //chiefEngineer: "—",
+        //strategist: "—",
+        //mechanic: "—"
+      },
+      stats: { rank: "24", points: "3", wins: "—", seasons: "62" },
+      drivers: [
+        { driver:"Karran Datri", manager:"	AldaMranggen", country:"Indonesia" },
+        { driver:"Iker Colom", manager:"Ahhhhhhh", country:"Spain" },
+        { driver:"Marcial Alonso Chacon", manager:"MANUELNEGRILLO2", country:"Spain" },
+        { driver:"Tjahjo Haryanto", manager:"	AhmadZakk25", country:"Indonesia" },
+        { driver:"Pepe Pereiro", manager:"Adrian2000", country:"Spain" }
+      ]
+    };
+
+    // ===== Inject data ke UI =====
+    function applyTeam() {
+    document.getElementById('i-nama').textContent = dataTeam.name;
+    document.getElementById('i-negara').textContent = dataTeam.country;
+    document.getElementById('i-anggota').textContent = dataTeam.members;
+    document.getElementById('i-rating').textContent = dataTeam.rating;
+    document.getElementById('i-motto').textContent = `“${dataTeam.motto}”`;
+    document.getElementById('r-manager').textContent = dataTeam.roles.manager;
+    document.getElementById('r-co').textContent = dataTeam.roles.coManager;
+    document.getElementById('r-mem').textContent = dataTeam.roles.members;
+    document.getElementById('r-mem1').textContent = dataTeam.roles.members1;
+    document.getElementById('r-mem2').textContent = dataTeam.roles.members2;
+    document.getElementById('s-rank').textContent = dataTeam.stats.rank;
+    document.getElementById('s-points').textContent = dataTeam.stats.points;
+    document.getElementById('s-wins').textContent = dataTeam.stats.wins;
+    document.getElementById('s-seasons').textContent = dataTeam.stats.seasons;
+    const wrap = document.getElementById('drivers-list');
+    wrap.innerHTML = "";
+    dataTeam.drivers.forEach(d => {
+        const row = document.createElement('div');
+        row.className = 'driver';
+        row.innerHTML = `<span><strong>${d.driver}</strong></span><span>Manager: ${d.manager}</span><span>${d.country}</span>`;
+        wrap.appendChild(row);
+    });
+}
+
+    // ===== Scroll to top =====
+    const toTop = document.getElementById('toTop');
+    window.addEventListener('scroll', ()=>{
+      if (document.documentElement.scrollTop > 250) toTop.classList.add('show');
+      else toTop.classList.remove('show');
+    });
+    toTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+    // ===== Reveal on scroll =====
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); } });
+    },{threshold:.15});
+    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+    // ===== Footer year =====
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ===== Init =====
+    applyTeam();
+  </script>
+</body>
+</html>
